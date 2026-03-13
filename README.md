@@ -68,12 +68,12 @@ To avoid **“Conflicting migrations / multiple leaf nodes”** and **“Table a
 2. **“Table '…' already exists”** (migration was half-applied or DB was created elsewhere)  
    - Mark that migration as applied without running SQL:  
      `python manage.py migrate <app_name> <migration_name> --fake`  
-   - Example: `python manage.py migrate attendance_project 0003_notification --fake`  
+   - Example: `python manage.py migrate attendance_management_system 0003_notification --fake`  
    - Then run: `python manage.py migrate`
 
 ## Project Structure
 
-- `attendance_project/`: Main project and app directory.
+- `attendance_management_system/`: Main project and app directory.
 - `templates/`: HTML templates organized by role.
 - `static/`: CSS and JS files.
 - `media/`: Generated QR codes and uploads.

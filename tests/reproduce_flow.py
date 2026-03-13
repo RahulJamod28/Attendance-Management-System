@@ -3,10 +3,10 @@ import django
 import requests
 import time
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'attendance_project.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'attendance_management_system.settings')
 django.setup()
 
-from attendance_project.models import Batch, Subject
+from attendance_management_system.models import Batch, Subject
 
 BASE = 'http://127.0.0.1:8001'
 

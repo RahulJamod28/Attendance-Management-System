@@ -1,11 +1,11 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'attendance_project.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'attendance_management_system.settings')
 django.setup()
 
 from django.contrib.auth import get_user_model
-from attendance_project.models import Teacher, Student, Batch
+from attendance_management_system.models import Teacher, Student, Batch
 
 User = get_user_model()
 

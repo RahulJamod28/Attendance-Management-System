@@ -1,0 +1,215 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Welcome - QR
+Attendance Management System{% endblock %} {% block extra_css %}
+<style>
+  body {
+    background: var(--bg-main);
+  }
+
+  .hero-section {
+    background: var(--gradient-dark);
+    color: var(--text-main);
+    padding: 120px 24px 80px;
+    text-align: center;
+    border-radius: 0 0 40px 40px;
+    margin-bottom: 60px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+  }
+
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .btn-hero {
+    padding: 16px 40px;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-primary-hero {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-outline-hero {
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-outline-hero:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary);
+  }
+
+  .features-section {
+    padding: 0 24px 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    display: block;
+    text-align: center;
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 60px;
+    letter-spacing: -0.02em;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 32px;
+  }
+
+  .feature-card {
+    background: var(--bg-card);
+    padding: 48px 32px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    text-align: left;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-premium);
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 24px;
+    background: rgba(99, 102, 241, 0.1);
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+  }
+
+  .feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--text-main);
+    font-weight: 800;
+  }
+
+  .feature-card p {
+    color: var(--text-dim);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title { font-size: 2.75rem; }
+    .hero-subtitle { font-size: 1.1rem; }
+    .hero-section { padding: 80px 20px 60px; }
+  }
+</style>
+{% endblock %} 
+
+{% block content %}
+<div class="hero-section fade-in">
+  <div class="hero-content">
+    <h1 class="hero-title">Precision Attendance.<br>Perfected by QR.</h1>
+    <p class="hero-subtitle">
+      Elevate your institution's operational efficiency with our state-of-the-art geo-fenced QR attendance ecosystem. Secure, instant, and architected for scale.
+    </p>
+
+    <div class="cta-buttons">
+      <a href="{% url 'login' %}" class="btn btn-primary-hero btn-hero">Launch Platform</a>
+      <a href="{% url 'register' %}" class="btn btn-outline-hero btn-hero">Student Portal</a>
+    </div>
+  </div>
+</div>
+
+<div class="features-section fade-in">
+  <span class="section-tag">Capabilities</span>
+  <h2 class="section-title">The Future of Campus Management</h2>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>Advanced Geo-Fencing</h3>
+      <p>
+        Zero-trust distance validation ensures students are physically present in the room. Prevents off-site fraud with pinpoint accuracy.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Dynamic QR Engine</h3>
+      <p>
+        Self-rotating QR codes prevent session reuse and photo-sharing. Secured by high-level encryption for tamper-proof verification.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Real-time Intelligence</h3>
+      <p>
+        Live monitoring dashboards for educators and interactive analytics for administrators. Data-driven insights at your fingertips.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
