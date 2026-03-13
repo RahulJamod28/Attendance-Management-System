@@ -10,6 +10,31 @@ import csv
 import uuid
 from django.core import signing
 import time
+import math
+
+# --- Helper Functions ---
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    """Calculate the distance in meters between two points on Earth."""
+    if None in [lat1, lon1, lat2, lon2]:
+        return None
+        
+    R = 6371000  # Earth radius in meters
+    phi1, phi2 = math.radians(float(lat1)), math.radians(float(lat2))
+    dphi = math.radians(float(lat2) - float(lat1))
+    dlambda = math.radians(float(lon2) - float(lon1))
+    
+    a = math.sin(dphi / 2)**2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
+
+def log_action(user, action, details=""):
+    """Record an action in the AuditLog."""
+    try:
+        from .models import AuditLog
+        AuditLog.objects.create(user=user, action=action, details=details)
+    except Exception as e:
+        print(f"Error logging action: {e}")
 
 # --- Helper Functions ---
 
@@ -44,6 +69,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            log_action(user, "User Login", f"Logged in from {request.META.get('REMOTE_ADDR')}")
             return redirect('index')
         else:
             messages.error(request, 'Invalid username or password')
@@ -112,6 +138,7 @@ def register_view(request):
             )
             
             messages.success(request, 'Registration successful! Please login.')
+            log_action(user, "Student Registration", f"Student {username} (Roll: {roll_number}) registered via portal.")
             return redirect('login')
             
         except Exception as e:
@@ -168,6 +195,7 @@ def manage_users(request):
             else:
                 user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email, is_teacher=True)
                 Teacher.objects.create(user=user)
+                log_action(request.user, "Manage Users: Add Teacher", f"Added teacher {username}")
                 messages.success(request, 'Teacher added successfully')
                 
         elif action == 'add_student':
@@ -187,13 +215,16 @@ def manage_users(request):
                 user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email, is_student=True)
                 batch = Batch.objects.get(id=batch_id) if batch_id else None
                 Student.objects.create(user=user, roll_number=roll_number, batch=batch)
+                log_action(request.user, "Manage Users: Add Student", f"Added student {username} to batch {batch.name if batch else 'N/A'}")
                 messages.success(request, 'Student added successfully')
 
         elif action == 'delete_user':
             user_id = request.POST.get('user_id')
             try:
                 user = User.objects.get(id=user_id)
+                username = user.username
                 user.delete()
+                log_action(request.user, "Manage Users: Delete User", f"Deleted user {username}")
                 messages.success(request, 'User deleted successfully')
             except User.DoesNotExist:
                 messages.error(request, 'User not found')
@@ -424,11 +455,17 @@ def admin_attendance_report(request):
 # --- Teacher Views ---
 
 @login_required
+@user_passes_test(is_admin)
+def admin_audit_logs(request):
+    logs = AuditLog.objects.select_related('user').all().order_by('-timestamp')[:500] # Limit for speed
+    return render(request, 'admin/audit_logs.html', {'logs': logs})
+
+@login_required
 @user_passes_test(is_teacher)
 def teacher_dashboard(request):
     teacher = request.user.teacher_profile
-    active_sessions = AttendanceSession.objects.filter(teacher=teacher, is_active=True)
-    past_sessions = AttendanceSession.objects.filter(teacher=teacher, is_active=False).order_by('-start_time')[:5]
+    active_sessions = AttendanceSession.objects.filter(teacher=teacher, is_active=True).select_related('subject', 'batch')
+    past_sessions = AttendanceSession.objects.filter(teacher=teacher, is_active=False).select_related('subject', 'batch').order_by('-start_time')[:5]
     
     # Calculate recent attendance trend for chart
     from datetime import timedelta
@@ -487,7 +524,20 @@ def create_session(request):
             subjects = teacher.subjects.all()
             batches = Batch.objects.filter(subjects__in=subjects).distinct().order_by('-year', 'name')
             return render(request, 'teacher/create_session.html', {'subjects': subjects, 'batches': batches})
-        session = AttendanceSession.objects.create(teacher=teacher, subject=subject, batch=batch)
+        # Get GPS from form if available
+        lat = request.POST.get('latitude')
+        lon = request.POST.get('longitude')
+        rad = request.POST.get('radius', 100)
+        
+        session = AttendanceSession.objects.create(
+            teacher=teacher, 
+            subject=subject, 
+            batch=batch,
+            latitude=lat if lat else None,
+            longitude=lon if lon else None,
+            radius=float(rad) if rad else 100.0
+        )
+        log_action(request.user, "Create Session", f"Created {subject.name} session for {batch.name} (GPS restricted: {bool(lat)})")
         return redirect('session_qr', session_id=session.session_id)
     # Only show subjects teacher teaches and batches that have those subjects
     subjects = teacher.subjects.all().select_related('batch')
@@ -502,6 +552,7 @@ def session_qr(request, session_id):
         session.is_active = False
         session.end_time = timezone.now()
         session.save()
+        log_action(request.user, "End Session", f"Ended session for {session.subject.name}")
         return redirect('teacher_dashboard')
     return render(request, 'teacher/session_qr.html', {'session': session})
 
@@ -586,10 +637,11 @@ def student_dashboard(request):
     records = AttendanceRecord.objects.filter(student=student).order_by('-timestamp')
     
     if records.exists():
-        current_date = records.first().timestamp.date()
+        records_list = list(records) # Evaluate once
+        current_date = records_list[0].timestamp.date()
         expected_date = timezone.now().date()
         
-        for record in records:
+        for record in records_list:
             record_date = record.timestamp.date()
             if record_date == expected_date or record_date == expected_date - timedelta(days=1):
                 if record_date < expected_date:
@@ -678,10 +730,27 @@ def mark_attendance(request):
                 return JsonResponse({'status': 'error', 'message': 'You are not in this batch'})
             
             # Check if already marked
+            # GPS Validation
+            student_lat = data.get('latitude')
+            student_lon = data.get('longitude')
+            
+            if session.latitude and session.longitude:
+                if not student_lat or not student_lon:
+                    return JsonResponse({'status': 'error', 'message': 'Location access required for this session'}, status=400)
+                
+                distance = calculate_distance(session.latitude, session.longitude, student_lat, student_lon)
+                if distance > session.radius:
+                    log_action(request.user, "Fraud Attempt", f"Student tried to mark attendance from {distance:.1f}m away.")
+                    return JsonResponse({
+                        'status': 'error', 
+                        'message': f'You are too far from the classroom ({distance:.1f}m away)'
+                    }, status=403)
+
             if AttendanceRecord.objects.filter(session=session, student=student).exists():
                 return JsonResponse({'status': 'info', 'message': 'Attendance already marked'})
             
             AttendanceRecord.objects.create(session=session, student=student)
+            log_action(request.user, "Mark Attendance", f"Marked {student.user.get_full_name()} present for {session.subject.name}")
             
             return JsonResponse({'status': 'success', 'message': 'Attendance marked successfully'})
             
@@ -711,6 +780,7 @@ def admin_timetable(request):
         if 'delete' in request.POST:
             slot_id = request.POST.get('slot_id')
             TimetableSlot.objects.filter(id=slot_id).delete()
+            log_action(request.user, "Manage Timetable: Delete Slot", f"Removed slot ID {slot_id}")
             messages.success(request, 'Slot removed.')
         else:
             day = request.POST.get('day_of_week')
@@ -730,6 +800,7 @@ def admin_timetable(request):
                     teacher_id=teacher_id,
                     room=room
                 )
+                log_action(request.user, "Manage Timetable: Add Slot", f"Added slot on day {day}")
                 messages.success(request, 'Timetable slot added.')
         return redirect('admin_timetable')
     return render(request, 'admin/admin_timetable.html', {
@@ -746,7 +817,9 @@ def admin_syllabus(request):
     if request.method == 'POST':
         if 'delete' in request.POST:
             s = get_object_or_404(Syllabus, id=request.POST.get('syllabus_id'))
+            title = s.title or s.subject.name
             s.delete()
+            log_action(request.user, "Manage Syllabus: Delete", f"Removed syllabus: {title}")
             messages.success(request, 'Syllabus removed.')
         else:
             subject_id = request.POST.get('subject')
@@ -763,6 +836,7 @@ def admin_syllabus(request):
                         'uploaded_by': request.user
                     }
                 )
+                log_action(request.user, "Manage Syllabus: Upload", f"Uploaded syllabus for {subject_id}")
                 messages.success(request, 'Syllabus uploaded.')
         return redirect('admin_syllabus')
     return render(request, 'admin/admin_syllabus.html', {

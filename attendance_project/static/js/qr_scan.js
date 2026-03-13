@@ -1,16 +1,47 @@
 // QR Scanning Logic
+let cachedLocation = { lat: null, lon: null, timestamp: 0 };
+
+function updateLocationCache() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            cachedLocation = {
+                lat: position.coords.latitude,
+                lon: position.coords.longitude,
+                timestamp: Date.now()
+            };
+        }, null, { enableHighAccuracy: true });
+    }
+}
+
 function onScanSuccess(decodedText, decodedResult) {
-    // Handle the scanned code as you like, for example:
-    console.log(`Code matched = ${decodedText}`, decodedResult);
+    const resultDiv = document.getElementById('scan-result');
+    resultDiv.innerText = "⚡ Processing...";
     
-    // Send to backend
+    // Use cached location if fresh (less than 30s old), else get new one
+    if (cachedLocation.lat && (Date.now() - cachedLocation.timestamp < 30000)) {
+        sendAttendance(decodedText, cachedLocation.lat, cachedLocation.lon);
+    } else if (navigator.geolocation) {
+        resultDiv.innerText = "🛰️ Verifying location...";
+        navigator.geolocation.getCurrentPosition((position) => {
+            sendAttendance(decodedText, position.coords.latitude, position.coords.longitude);
+        }, () => sendAttendance(decodedText, null, null), { enableHighAccuracy: true });
+    } else {
+        sendAttendance(decodedText, null, null);
+    }
+}
+
+function sendAttendance(token, lat, lon) {
     fetch('/api/mark-attendance/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': getCookie('csrftoken')
         },
-        body: JSON.stringify({ token: decodedText })
+        body: JSON.stringify({ 
+            token: token,
+            latitude: lat,
+            longitude: lon
+        })
     })
     .then(response => response.json())
     .then(data => {
@@ -19,7 +50,6 @@ function onScanSuccess(decodedText, decodedResult) {
         
         if (data.status === 'success') {
             resultDiv.className = 'scan-result scan-success';
-            // Stop scanning? html5QrcodeScanner.clear();
         } else {
             resultDiv.className = 'scan-result scan-error';
         }
@@ -30,11 +60,9 @@ function onScanSuccess(decodedText, decodedResult) {
 }
 
 function onScanFailure(error) {
-    // handle scan failure, usually better to ignore and keep scanning.
-    // console.warn(`Code scan error = ${error}`);
+    // Keep scanning
 }
 
-// Helper to get CSRF token
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -50,15 +78,17 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Initialize Scanner if element exists
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('reader')) {
+        // Pre-fetch location immediately
+        updateLocationCache();
+        
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
             { 
-                fps: 10, 
+                fps: 25, 
                 qrbox: {width: 250, height: 250},
-                supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA, Html5QrcodeScanType.SCAN_TYPE_FILE]
+                supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
             },
             /* verbose= */ false);
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);

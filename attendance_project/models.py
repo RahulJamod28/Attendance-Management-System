@@ -48,6 +48,11 @@ class AttendanceSession(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    
+    # Geolocation fields
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    radius = models.FloatField(default=100.0) # in meters
 
     def __str__(self):
         return f"{self.subject.name} - {self.batch.name} ({self.start_time.strftime('%Y-%m-%d %H:%M')})"

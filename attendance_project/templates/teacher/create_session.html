@@ -4,9 +4,9 @@
 {% block header_title %}Create Attendance Session{% endblock %}
 
 {% block content %}
-<div class="card" style="max-width: 600px; margin: 0 auto;">
-    <h3>New Session Details</h3>
-    <form method="post">
+<div class="card fade-in" style="max-width: 600px; margin: 0 auto;">
+    <h3>🚀 Start New Session</h3>
+    <form method="post" id="sessionForm">
         {% csrf_token %}
         <div class="form-group">
             <label for="subject">Subject</label>
@@ -27,8 +27,67 @@
                 {% endfor %}
             </select>
         </div>
+
+        <div class="card" style="background: rgba(15, 23, 42, 0.4); border-style: dashed;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <label style="margin: 0; font-weight: 700;">📍 Enable GPS Geo-fencing</label>
+                <label class="switch">
+                    <input type="checkbox" id="gpsToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 15px;">Students must be within the specified range to scan the QR.</p>
+            
+            <div id="gpsFields" style="display: none;">
+                <div class="form-group">
+                    <label>Radius (Meters): <span id="radiusVal">100</span>m</label>
+                    <input type="range" name="radius" min="10" max="500" value="100" class="form-control" style="padding: 0;" oninput="document.getElementById('radiusVal').innerText = this.value">
+                </div>
+                <input type="hidden" name="latitude" id="lat">
+                <input type="hidden" name="longitude" id="lon">
+                <div id="gpsStatus" style="font-size: 0.8rem; color: var(--accent);"></div>
+            </div>
+        </div>
         
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Start Session</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Start Class Session</button>
     </form>
 </div>
+
+{% block extra_js %}
+<script>
+    const gpsToggle = document.getElementById('gpsToggle');
+    const gpsFields = document.getElementById('gpsFields');
+    const gpsStatus = document.getElementById('gpsStatus');
+
+    gpsToggle.addEventListener('change', function() {
+        if (this.checked) {
+            gpsFields.style.display = 'block';
+            if (navigator.geolocation) {
+                gpsStatus.innerText = "🛰️ Locating educator...";
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        document.getElementById('lat').value = pos.coords.latitude;
+                        document.getElementById('lon').value = pos.coords.longitude;
+                        gpsStatus.innerText = `✅ Location set: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
+                    },
+                    (err) => {
+                        gpsStatus.innerText = "❌ Error: Could not get location. Ensure GPS is on.";
+                        gpsStatus.style.color = "#f87171";
+                        this.checked = false;
+                        setTimeout(() => gpsFields.style.display = 'none', 2000);
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+                this.checked = false;
+            }
+        } else {
+            gpsFields.style.display = 'none';
+            document.getElementById('lat').value = "";
+            document.getElementById('lon').value = "";
+        }
+    });
+</script>
+{% endblock %}
+
 {% endblock %}

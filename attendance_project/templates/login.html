@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="login-container">
-    <div class="login-box">
-        <h2 style="text-align: center; color: #2c3e50;">Login</h2>
+    <div class="login-box fade-in">
+        <h2>Login</h2>
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -18,9 +18,10 @@
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
         </form>
-        <p style="text-align: center; margin-top: 15px;">
-            Don't have an account? <a href="{% url 'register' %}">Register</a>
+        <p style="text-align: center; margin-top: 20px; color: var(--text-dim);">
+            Don't have an account? <a href="{% url 'register' %}" style="color: var(--primary-light);">Register</a>
         </p>
     </div>
 </div>
+
 {% endblock %}

@@ -12,6 +12,7 @@
             <li><a href="{% url 'admin_syllabus' %}">Syllabus</a></li>
             <li><a href="{% url 'manage_attendance' %}">Attendance</a></li>
             <li><a href="{% url 'admin_attendance_report' %}">Reports</a></li>
+            <li><a href="{% url 'admin_audit_logs' %}">Audit Logs</a></li>
             <li><a href="{% url 'export_reports' %}">Export CSV</a></li>
         {% elif user.is_teacher %}
             <li><a href="{% url 'teacher_dashboard' %}">Dashboard</a></li>

@@ -1,4 +1,4 @@
-/* Dashboard Stats Grid */
+/* Dashboard Layout Utilities */
 .dashboard-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -7,373 +7,276 @@
 }
 
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: 24px;
-    margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
+/* Premium Stat Cards */
 .stat-card {
   background: var(--bg-card);
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: var(--shadow-sm);
-  text-align: center;
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
   position: relative;
-  border: 1px solid var(--border-color);
-  margin-bottom: 20px;
-  transition: box-shadow 0.15s ease;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .stat-card:hover {
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-premium);
+}
+
+.stat-card .stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  opacity: 0.8;
 }
 
 .stat-card h3 {
-  font-size: 2.25rem;
-  margin-bottom: 8px;
-  font-weight: 700;
-  color: var(--text-color);
-}
-
-.stat-card.gradient-purple h3,
-.stat-card.gradient-pink h3,
-.stat-card.gradient-blue h3 {
-  color: white;
-  -webkit-text-fill-color: white;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--text-main);
 }
 
 .stat-card p {
-  font-size: 1rem;
-  color: #718096;
+  font-size: 0.875rem;
   font-weight: 600;
+  color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
-/* Gradient Stat Cards Variants – classic dark theme */
-.stat-card.gradient-purple {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
+/* Gradient Variants */
+.gradient-purple { border-left: 4px solid #6366f1; }
+.gradient-blue { border-left: 4px solid #3b82f6; }
+.gradient-pink { border-left: 4px solid #ec4899; }
+
+/* Quick Actions Grid */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
-.stat-card.gradient-purple h3,
-.stat-card.gradient-purple p {
-  color: white;
-  -webkit-text-fill-color: white;
-}
-
-.stat-card.gradient-pink {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-}
-
-.stat-card.gradient-pink h3,
-.stat-card.gradient-pink p {
-  color: white;
-  -webkit-text-fill-color: white;
-}
-
-.stat-card.gradient-blue {
-  background: linear-gradient(135deg, #0d9488 0%, #047857 100%);
-  color: white;
-}
-
-.stat-card.gradient-blue h3,
-.stat-card.gradient-blue p {
-  color: white;
-  -webkit-text-fill-color: white;
-}
-
-/* Progress Bars */
-.progress-container {
-  margin: 20px 0;
-}
-
-.progress-label {
+.action-btn {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: var(--text-muted, #94a3b8);
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  gap: 12px;
 }
 
-.progress-bar {
-  height: 12px;
-  background: #e2e8f0;
-  border-radius: 10px;
-  overflow: hidden;
+.action-btn:hover {
+  background: rgba(99, 102, 241, 0.05);
+  border-color: var(--primary);
+  transform: scale(1.02);
+}
+
+.action-btn .action-icon {
+  font-size: 1.5rem;
+  background: rgba(99, 102, 241, 0.1);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+}
+
+.action-btn h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-main);
+}
+
+.action-btn p {
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* Section Header Styles */
+.card h3 {
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+/* Welcome Banner Component */
+.welcome-banner {
+  background: var(--gradient-primary);
+  padding: 48px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 40px;
   position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-glow);
 }
 
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  border-radius: 10px;
-  transition: width 0.4s ease;
+.welcome-banner h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.03em;
 }
 
-/* Status Badge */
-.status-badge {
+.welcome-banner p {
+  font-size: 1.125rem;
+  opacity: 0.9;
+  max-width: 600px;
+}
+
+.welcome-banner::after {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  filter: blur(40px);
+}
+
+/* Modern Toggle Switch */
+.switch {
+  position: relative;
   display: inline-block;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  width: 50px;
+  height: 24px;
 }
 
-.status-badge.present {
-  background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
-  color: #155724;
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-.status-badge.absent {
-  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-  color: #721c24;
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--border);
+  transition: .4s;
+  border-radius: 24px;
 }
 
-.status-badge.low {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  color: #721c24;
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
 }
 
-.status-badge.ended {
-  background: var(--bg-input);
-  color: var(--text-muted);
+input:checked + .slider {
+  background: var(--gradient-primary);
 }
 
-/* Tables */
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Enhanced Tables */
 .table-container {
-  overflow-x: auto;
-}
-
-.data-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-top: 20px;
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
 }
 
-.data-table thead {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.data-table th {
-  padding: 16px;
-  text-align: left;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
-}
-
-.data-table th:first-child {
-  border-top-left-radius: 12px;
-}
-
-.data-table th:last-child {
-  border-top-right-radius: 12px;
-}
-
-.data-table td {
-  padding: 16px;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-card);
-  color: var(--text-color);
-}
-
-.data-table tbody tr:hover {
-  background: rgba(102, 126, 234, 0.06);
-}
-
-/* Standardized Table Styles */
 table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0; 
-  margin-top: 24px; 
+  border-collapse: collapse;
   background: var(--bg-card);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--border-color);
-  table-layout: fixed; /* Strict layout */
-}
-
-th, td {
-  padding: 20px 24px; /* Increased padding significantly for "distance" */
-  vertical-align: middle;
-  text-align: left;
-  border-bottom: 1px solid var(--border-color);
-  overflow: hidden; /* Prevent ANY content from bleeding out */
-  text-overflow: ellipsis; /* Add ellipsis if hidden */
 }
 
 th {
   background: rgba(15, 23, 42, 0.4);
-  color: var(--primary-color);
+  padding: 16px 24px;
+  text-align: left;
+  font-size: 0.8125rem;
   font-weight: 700;
-  white-space: nowrap;
   text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
 }
 
 td {
-  white-space: nowrap; /* Keep data on one line to prevent messy wrapping */
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  padding: 16px 24px;
+  color: var(--text-dim);
+  font-size: 0.9375rem;
+  border-bottom: 1px solid var(--border);
 }
 
-/* Column Width Utilities - Adjusted for better spacing */
-.col-sno { width: 70px; text-align: center; }
-.col-name { width: 22%; }
-.col-username { width: 18%; }
-.col-subjects { width: 20%; }
-.col-roll { width: 12%; }
-.col-batch { width: 12%; }
-.col-actions { width: 240px; text-align: center; } /* Wider for buttons */
-.col-date { width: 18%; }
-.col-status { width: 120px; }
-
-/* Truncate long text in columns */
-.col-name, .col-username, .col-subjects, .col-batch {
-    display: block; /* Ensure ellipsis works */
+tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-main);
 }
 
-/* Action Buttons Container */
-.action-buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center; /* Center buttons in the cell */
-    align-items: center;
-    white-space: nowrap;
+/* Status Badges */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
-/* Ensure buttons don't shrink and look consistent */
-.action-buttons .btn, 
-.action-buttons .btn-primary, 
-.action-buttons .btn-danger,
-.action-buttons .btn-success,
-.action-buttons form button {
-    flex: 0 0 auto; /* Prevent shrinking */
-    padding: 6px 14px !important;
-    font-size: 0.8rem !important;
-    border-radius: 6px !important;
-    margin: 0 !important;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 30px; /* Fixed smaller height */
-    line-height: 1;
+.status-badge.success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-light);
 }
 
-/* Specific button colors if not already defined */
-.action-buttons .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    color: white;
+.status-badge.warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
 }
 
-.action-buttons .btn-danger {
-    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-    border: none;
-    color: white;
+/* Charts & Visualization */
+.chart-container {
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
 }
 
-.action-buttons .btn-success {
-    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
-    border: none;
-    color: white;
-}
-
-/* Welcome Banner */
-.welcome-banner {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 32px;
-    border-radius: 20px;
-    margin-bottom: 32px;
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-}
-
-.welcome-banner h2 {
-    font-size: 2rem;
-    margin-bottom: 8px;
-    font-weight: 700;
-}
-
-.welcome-banner p {
-    font-size: 1.1rem;
-    opacity: 0.95;
-}
-
-/* Quick Actions */
-.quick-actions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-    margin-bottom: 32px;
-}
-
-.action-btn {
-    background: var(--bg-card);
+/* Responsive Overrides */
+@media (max-width: 768px) {
+  .welcome-banner {
     padding: 32px 24px;
-    border-radius: 14px;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: box-shadow 0.15s ease, border-color 0.15s ease;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-color);
-}
-
-.action-btn:hover {
-    box-shadow: var(--shadow-md);
-    border-color: rgba(102, 126, 234, 0.5);
-}
-
-.action-btn.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.action-btn.primary:hover {
-    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
-}
-
-.action-btn.secondary {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: white;
-}
-
-.action-btn.secondary:hover {
-    box-shadow: 0 12px 32px rgba(0, 242, 254, 0.5);
-}
-
-.action-icon {
-    font-size: 4rem;
-    margin-bottom: 16px;
-}
-
-.action-btn h3 {
-    font-size: 1.5rem;
-    margin-bottom: 8px;
-    font-weight: 700;
-}
-
-.action-btn p {
-    font-size: 0.95rem;
-    opacity: 0.9;
-}
-
-.action-btn.primary h3,
-.action-btn.primary p,
-.action-btn.secondary h3,
-.action-btn.secondary p {
-    color: white;
+  }
+  
+  .welcome-banner h2 {
+    font-size: 1.75rem;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
 }

@@ -29,10 +29,10 @@ else:
     print("ℹ️ User 'faculty' already exists.")
 
 # 3. Student – ensure a default batch exists (Batch has only name + year, no section)
-batch, created = Batch.objects.get_or_create(
-    name='B.Tech CSE',
-    defaults={'year': 2024}
-)
+batch = Batch.objects.filter(name='B.Tech CSE').first()
+if not batch:
+    batch = Batch.objects.create(name='B.Tech CSE', year=2024)
+
 
 if not User.objects.filter(username='Anil').exists():
     student_user = User.objects.create_user('Anil', 'anil@example.com', '123')

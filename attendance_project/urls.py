@@ -26,6 +26,8 @@ urlpatterns = [
     path('dashboard/admin/export/', views.export_reports, name='export_reports'),
     path('dashboard/admin/timetable/', views.admin_timetable, name='admin_timetable'),
     path('dashboard/admin/syllabus/', views.admin_syllabus, name='admin_syllabus'),
+    path('dashboard/admin/audit-logs/', views.admin_audit_logs, name='admin_audit_logs'),
+
     
     # Teacher
     path('dashboard/teacher/', views.teacher_dashboard, name='teacher_dashboard'),

@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="login-container">
-    <div class="login-box" style="width: 500px;">
-        <h2 style="text-align: center; color: #2c3e50;">Student Registration</h2>
+    <div class="login-box fade-in" style="max-width: 550px;">
+        <h2>Student Registration</h2>
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -16,7 +16,7 @@
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" class="form-control" required>
             </div>
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 15px;">
                 <div class="form-group" style="flex: 1;">
                     <label for="first_name">First Name</label>
                     <input type="text" name="first_name" id="first_name" class="form-control" required>
@@ -44,11 +44,12 @@
                 </select>
             </div>
             
-            <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
         </form>
-        <p style="text-align: center; margin-top: 15px;">
-            Already have an account? <a href="{% url 'login' %}">Login</a>
+        <p style="text-align: center; margin-top: 20px; color: var(--text-dim);">
+            Already have an account? <a href="{% url 'login' %}" style="color: var(--primary-light);">Login</a>
         </p>
     </div>
 </div>
+
 {% endblock %}
