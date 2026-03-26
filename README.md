@@ -62,7 +62,7 @@ graph TD
 
 ### 1. Environment Preparation
 ```bash
-# Clone and enter
+# Clone And Enter
 git clone https://github.com/AnilYadav17/Attendance-Management-System.git
 cd Attendance-Management-System
 
@@ -125,8 +125,8 @@ python manage.py runserver
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+2. Create Your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit Your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
@@ -134,6 +134,6 @@ Contributions are what make the open source community such an amazing place to l
 
 ## 📜 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed Under The MIT License. See `LICENSE` for more information.
 
 **Developed with ❤️ by [Anil Yadav](https://github.com/AnilYadav17)**
