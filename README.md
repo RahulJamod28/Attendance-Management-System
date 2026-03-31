@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)](https://github.com/AnilYadav17/Attendance-Management-System)
 
-> **Elevate Institutional Efficiency** with a state-of-the-art geo-fenced QR attendance ecosystem. Secure, instant, and architected for scale.
+> **Elevate Institutional Efficiency** With a state-of-the-art geo-fenced QR attendance ecosystem. Secure, instant, and architected for scale.
 
 ---
 
